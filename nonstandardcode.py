@@ -24,8 +24,8 @@ import pandas as pd
 def load_housing_data(housing_path=HOUSING_PATH):
     csv_path = os.path.join(housing_path, "housing.csv")
     return pd.read_csv(csv_path)
-
-housing = load_housing_data
+fetch_housing_data()
+housing = load_housing_data()
 
 from sklearn.model_selection import train_test_split
 
@@ -62,7 +62,9 @@ for set_ in (strat_train_set, strat_test_set):
 housing = strat_train_set.copy()
 housing.plot(kind="scatter", x="longitude", y="latitude")
 housing.plot(kind="scatter", x="longitude", y="latitude", alpha=0.1)
-
+housing_cat=housing[('ocean_proximity')]
+housing=housing.join(pd.get_dummies(housing_cat,drop_first=True))
+housing=housing.drop("ocean_proximity",axis=1)
 corr_matrix = housing.corr()
 corr_matrix["median_house_value"].sort_values(ascending=False)
 housing["rooms_per_household"] = housing["total_rooms"]/housing["households"]
